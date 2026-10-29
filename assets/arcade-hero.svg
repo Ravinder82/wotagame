@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 470" role="img" aria-labelledby="title desc">
+<title id="title">XPlayerCards arcade world</title><desc id="desc">A cinematic sunset over mountains and a lake, with a player holding a controller and a dog enjoying a break.</desc>
+<defs>
+ <linearGradient id="sky" x2="0" y2="1"><stop stop-color="#0b1731"/><stop offset=".38" stop-color="#56466a"/><stop offset=".62" stop-color="#f79b69"/><stop offset="1" stop-color="#ffd18b"/></linearGradient>
+ <radialGradient id="sun"><stop stop-color="#fff4c6"/><stop offset=".25" stop-color="#ffcc82" stop-opacity=".95"/><stop offset="1" stop-color="#f48663" stop-opacity="0"/></radialGradient>
+ <linearGradient id="peak" x2="0" y2="1"><stop stop-color="#516b93"/><stop offset="1" stop-color="#17283d"/></linearGradient>
+ <linearGradient id="water" x2="0" y2="1"><stop stop-color="#ed9a77"/><stop offset=".45" stop-color="#34536e"/><stop offset="1" stop-color="#091624"/></linearGradient>
+ <linearGradient id="coat" x2=".9" y2="1"><stop stop-color="#314b60"/><stop offset=".48" stop-color="#152638"/><stop offset="1" stop-color="#09141f"/></linearGradient>
+ <linearGradient id="hood" x2="1" y2="1"><stop stop-color="#83b86f"/><stop offset=".5" stop-color="#294e4b"/><stop offset="1" stop-color="#122e3a"/></linearGradient>
+ <linearGradient id="dog" x2="1" y2="1"><stop stop-color="#e4b078"/><stop offset=".55" stop-color="#99694f"/><stop offset="1" stop-color="#513b36"/></linearGradient>
+ <radialGradient id="limeGlow"><stop stop-color="#b5ff76" stop-opacity=".45"/><stop offset="1" stop-color="#b5ff76" stop-opacity="0"/></radialGradient>
+ <filter id="blur"><feGaussianBlur stdDeviation="22"/></filter>
+ <filter id="softShadow"><feDropShadow dx="0" dy="12" stdDeviation="12" flood-color="#030912" flood-opacity=".62"/></filter>
+ <pattern id="grain" width="37" height="37" patternUnits="userSpaceOnUse"><circle cx="5" cy="6" r=".8" fill="#fff" opacity=".16"/><circle cx="27" cy="22" r=".6" fill="#fff" opacity=".11"/></pattern>
+</defs>
+<rect width="760" height="470" fill="url(#sky)"/>
+<ellipse cx="425" cy="237" rx="310" ry="160" fill="url(#sun)"/><circle cx="425" cy="206" r="62" fill="#ffe7b0" opacity=".94"/><circle cx="425" cy="206" r="88" fill="url(#sun)"/>
+<g opacity=".48" fill="#ffe6c2"><path d="M56 80c27-20 57-21 87-5 29-14 61-5 72 15H56Z"/><path d="M430 87c20-18 49-17 69-6 21-11 49-3 61 13H430Z"/><path d="M605 142c25-17 57-15 77 3h-77Z"/></g>
+<path d="M0 254 71 199 124 228 208 138 261 193 326 154 384 203 440 158 513 207 577 132 628 190 699 158 760 190V343H0Z" fill="#8c7895" opacity=".72"/>
+<path d="M0 281 61 217 116 250 198 168 249 222 323 173 382 235 442 188 504 242 579 168 639 236 702 190 760 220V356H0Z" fill="url(#peak)"/>
+<path d="m198 168 24 40-23-8-18 17 17-30Zm381 0 23 40-22-10-17 18 12-29Z" fill="#dce5de" opacity=".82"/>
+<path d="M0 293c94-26 174-15 253 1 91 19 169 11 245-4 92-18 169-6 262 5v175H0Z" fill="url(#water)"/>
+<path d="M306 292c60-4 111-3 160-12 48-8 90-4 128 4-49 8-91 14-140 16-51 3-102-1-148-8Z" fill="#ffd79b" opacity=".8" filter="url(#blur)"/>
+<path d="M343 296h131M327 310h169M358 326h116M304 347h219M366 366h119M290 389h252M345 414h135" stroke="#ffd8a6" stroke-opacity=".48" stroke-linecap="round" stroke-width="2.5"/>
+<path d="M0 366 54 335 110 355 176 322 222 353 280 341 327 366 396 346 451 361 514 332 579 359 644 330 704 351 760 333V470H0Z" fill="#0a1724"/>
+<path d="M0 411 70 384 112 404 178 374 231 400 294 383 352 410 419 386 480 408 554 378 616 400 686 374 760 394V470H0Z" fill="#101e2a"/>
+<ellipse cx="414" cy="432" rx="266" ry="60" fill="url(#limeGlow)" filter="url(#blur)"/>
+<g opacity=".92">
+ <path d="M42 245v-47h47v47" stroke="#ffd59a" stroke-width="3" fill="#2b3438"/><path d="M30 199h69l-34-28Z" fill="#171f2b"/><rect x="58" y="214" width="15" height="20" rx="2" fill="#ffb86a" opacity=".9"/><rect x="905" y="0" width="0" height="0" fill="none"/>
+ <path d="M77 247v-29h14v29M37 247v-29h14v29" fill="#ffcf88" opacity=".58"/>
+ <path d="M662 232v-66h52v66" stroke="#b98775" stroke-width="3" fill="#182638"/><path d="M649 167h78l-39-35Z" fill="#1a2637"/><rect x="678" y="188" width="18" height="24" rx="2" fill="#ffc67b"/>
+</g>
+<g filter="url(#softShadow)">
+ <!-- player silhouette seated with controller -->
+ <path d="M167 470c6-61 27-112 66-142 24-18 56-26 92-22 44 5 78 31 95 71 10 25 16 57 18 93Z" fill="#08131e"/>
+ <path d="M196 380c-26-31-33-65-19-92 13-26 45-43 75-39 22 3 40 21 45 49l3 37-39 31Z" fill="url(#coat)"/>
+ <path d="M212 279c-8-32 11-67 40-80 24-11 55-4 72 17 17 22 17 53 3 77l-17 28-45-10-38-8Z" fill="url(#hood)" stroke="#9abb8b" stroke-opacity=".45" stroke-width="2"/>
+ <path d="M225 243c-2-35 19-52 45-53 30-1 49 18 51 44l-5 28c-15 20-36 34-54 36-22-10-35-29-37-55Z" fill="#101d2b"/>
+ <path d="M231 241c13-22 35-34 62-29l24 17-8 28-11 13-38-4-25-14Z" fill="#192c3b"/>
+ <path d="M240 295 236 320l24 21 33-8 18-27-15-20Z" fill="#243948"/>
+ <path d="M208 332c30 6 65 30 90 59l-20 27c-28-17-56-31-79-32-18 0-33-7-41-21-8-13 4-35 20-40Z" fill="url(#coat)"/>
+ <path d="M320 328c37 1 67 21 89 50l-19 30c-32-16-55-20-75-20l-25-33Z" fill="url(#coat)"/>
+ <path d="M241 367c-11 2-18 8-20 17 7 12 23 19 41 24l19-18-15-20Z" fill="#bc8b69"/>
+ <path d="M360 367c13-8 26-5 36 5l-10 23c-13 5-26 0-33-10Z" fill="#c4946d"/>
+ <path d="M262 382c24-19 51-19 78-5 15 8 27 18 37 33l-17 21h-88l-22-24Z" fill="#0b1420" stroke="#8aa2ad" stroke-opacity=".62" stroke-width="2"/>
+ <path d="M270 389c13-7 22-7 34 0M341 389c10-6 17-4 25 3" stroke="#a9f45f" stroke-width="3" stroke-linecap="round"/>
+ <path d="M285 395 299 407 294 418" stroke="#a9f45f" stroke-width="3" fill="none" stroke-linecap="round"/>
+ <circle cx="350" cy="402" r="5" fill="#ffbd63"/><circle cx="363" cy="411" r="5" fill="#7cc5ff"/>
+ <!-- resting dog -->
+ <path d="M412 420c-13-27 0-47 22-52 20-5 42 3 56 17l34 5c18 4 30 20 29 39l-7 21h-128Z" fill="url(#dog)"/>
+ <path d="M420 380c-19-22-19-43-6-54 16-13 35 5 43 19l3 24Z" fill="#7f4e3c"/>
+ <path d="M475 374c16-24 42-29 57-12 15 17 5 39-11 47l-18 2-28-14Z" fill="#dca875"/>
+ <path d="M479 384c-5-17 8-33 24-33 17 0 27 15 25 30-1 15-12 27-27 27-11 0-19-7-22-24Z" fill="#e2bc91"/>
+ <ellipse cx="497" cy="392" rx="5.5" ry="6.5" fill="#121821"/><ellipse cx="518" cy="391" rx="5.5" ry="6.5" fill="#121821"/><circle cx="499" cy="390" r="1.7" fill="#fff"/><circle cx="520" cy="389" r="1.7" fill="#fff"/>
+ <path d="M503 406c8-6 15-5 22 0-5 10-17 12-22 0Z" fill="#17202a"/><path d="M506 415c6 4 12 4 18 0" stroke="#563a33" stroke-width="2" fill="none" stroke-linecap="round"/>
+ <path d="M450 419c-1 9 5 18 15 20M524 432c6 4 12 5 19 3" stroke="#51372d" stroke-width="7" stroke-linecap="round"/>
+</g>
+<g fill="#b5f66c"><circle cx="123" cy="176" r="2"/><circle cx="561" cy="102" r="2"/><circle cx="620" cy="282" r="1.7"/><circle cx="148" cy="296" r="1.7"/></g>
+<g stroke="#b5f66c" stroke-width="2.5" stroke-linecap="round" opacity=".8"><path d="M112 158l9 3m-4-9-2 9M591 247l10-3m-5-7 1 8M572 124l10 1"/></g>
+<rect width="760" height="470" fill="url(#grain)" opacity=".5"/>
+<rect x=".75" y=".75" width="758.5" height="468.5" rx="25" fill="none" stroke="#fff" stroke-opacity=".13" stroke-width="1.5"/>
+</svg>

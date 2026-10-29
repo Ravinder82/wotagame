@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 340" role="img" aria-labelledby="title desc">
+<title id="title">Crossword artwork</title><desc id="desc">A tactile crossword tile board on a warm dark desk, with ivory letter tiles highlighted by amber light.</desc>
+<defs>
+ <linearGradient id="desk" x2="1" y2="1"><stop stop-color="#4a2c24"/><stop offset=".48" stop-color="#1e1b23"/><stop offset="1" stop-color="#0a1523"/></linearGradient>
+ <linearGradient id="ivory" x2="0" y2="1"><stop stop-color="#fff7df"/><stop offset="1" stop-color="#cfc0a0"/></linearGradient>
+ <linearGradient id="gold" x2="0" y2="1"><stop stop-color="#ffdc88"/><stop offset="1" stop-color="#ce7a38"/></linearGradient>
+ <radialGradient id="lamp"><stop stop-color="#ffbf73" stop-opacity=".55"/><stop offset="1" stop-color="#e4774d" stop-opacity="0"/></radialGradient>
+ <filter id="shadow"><feDropShadow dx="0" dy="8" stdDeviation="8" flood-color="#070b10" flood-opacity=".7"/></filter>
+ <pattern id="wood" width="65" height="20" patternUnits="userSpaceOnUse"><path d="M0 7H65M0 16H65" stroke="#f6ba80" stroke-opacity=".08" stroke-width="1"/></pattern>
+ <pattern id="grain" width="23" height="23" patternUnits="userSpaceOnUse"><circle cx="4" cy="5" r=".7" fill="#fff" opacity=".18"/><circle cx="18" cy="16" r=".5" fill="#fff" opacity=".13"/></pattern>
+</defs>
+<rect width="480" height="340" fill="url(#desk)"/><rect width="480" height="340" fill="url(#wood)"/><ellipse cx="129" cy="44" rx="200" ry="150" fill="url(#lamp)"/>
+<path d="M0 0 150 0 0 128Z" fill="#f4a36a" opacity=".08"/><path d="M480 340 320 340 480 182Z" fill="#5e96d5" opacity=".12"/>
+<g transform="translate(65 43) rotate(-6 170 116)" filter="url(#shadow)">
+ <rect x="0" y="0" width="348" height="237" rx="14" fill="#090d14" stroke="#e1bf8a" stroke-opacity=".43" stroke-width="2"/>
+ <rect x="8" y="8" width="332" height="221" rx="9" fill="#111925" stroke="#ffffff" stroke-opacity=".06"/>
+ <g fill="url(#ivory)" stroke="#b9aa8e" stroke-width="1">
+ <rect x="16" y="16" width="52" height="47" rx="4"/><rect x="71" y="16" width="52" height="47" rx="4"/><rect x="126" y="16" width="52" height="47" rx="4"/><rect x="181" y="16" width="52" height="47" rx="4"/><rect x="236" y="16" width="52" height="47" rx="4"/>
+ <rect x="16" y="66" width="52" height="47" rx="4"/><rect x="71" y="66" width="52" height="47" rx="4"/><rect x="126" y="66" width="52" height="47" rx="4"/><rect x="181" y="66" width="52" height="47" rx="4"/><rect x="236" y="66" width="52" height="47" rx="4"/>
+ <rect x="16" y="116" width="52" height="47" rx="4"/><rect x="71" y="116" width="52" height="47" rx="4"/><rect x="126" y="116" width="52" height="47" rx="4"/><rect x="181" y="116" width="52" height="47" rx="4"/><rect x="236" y="116" width="52" height="47" rx="4"/>
+ <rect x="16" y="166" width="52" height="47" rx="4"/><rect x="71" y="166" width="52" height="47" rx="4"/><rect x="126" y="166" width="52" height="47" rx="4"/><rect x="181" y="166" width="52" height="47" rx="4"/><rect x="236" y="166" width="52" height="47" rx="4"/>
+ </g>
+ <g fill="#252c38" font-family="Georgia,serif" font-weight="700" text-anchor="middle" font-size="32">
+  <text x="42" y="50">C</text><text x="97" y="50">R</text><text x="152" y="50">O</text><text x="207" y="50">S</text><text x="262" y="50">S</text>
+  <text x="42" y="100">W</text><text x="97" y="100">O</text><text x="152" y="100">R</text><text x="207" y="100">D</text><text x="262" y="100">S</text>
+  <text x="42" y="150">B</text><text x="97" y="150">R</text><text x="152" y="150">A</text><text x="207" y="150">I</text><text x="262" y="150">N</text>
+  <text x="42" y="200">G</text><text x="97" y="200">A</text><text x="152" y="200">M</text><text x="207" y="200">E</text><text x="262" y="200">S</text>
+ </g>
+ <rect x="126" y="66" width="52" height="47" rx="4" fill="url(#gold)" stroke="#fff0bd" stroke-width="2"/><text x="152" y="100" fill="#34231a" font-family="Georgia,serif" font-weight="800" font-size="32" text-anchor="middle">R</text>
+ <path d="M303 29 330 5 339 14 314 42Z" fill="#a9bdd0"/><path d="M303 29 330 5" stroke="#f3fafc" stroke-width="3"/>
+</g>
+<g transform="translate(22 235)"><ellipse cx="38" cy="36" rx="42" ry="12" fill="#050910" opacity=".5"/><path d="M2 23Q0 0 29 0H54Q74 2 70 26Z" fill="#111720" stroke="#ab8d68" stroke-width="2"/><path d="M5 18H67" stroke="#dfb68b" stroke-width="3"/><ellipse cx="36" cy="9" rx="27" ry="8" fill="#5a3426"/></g>
+<rect width="480" height="340" fill="url(#grain)" opacity=".42"/><rect x=".75" y=".75" width="478.5" height="338.5" rx="18" fill="none" stroke="#fff" stroke-opacity=".16" stroke-width="1.5"/>
+</svg>

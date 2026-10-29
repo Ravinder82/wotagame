@@ -1,0 +1,321 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0f1115"><title>Game Studio · WotaGame</title>
+<style>
+:root{color-scheme:dark;--bg:#0f1115;--panel:#181b22;--panel2:#1e222b;--line:#2d3139;--muted:#8b93a7;--text:#f4f6fb;--accent:#7cffb2;--accent2:#5eead4;--danger:#ff6b6b;--warn:#fbbf24}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse 80% 50% at 20% -10%,#1a2e24 0,transparent 60%),var(--bg);color:var(--text);font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;min-height:100vh}
+button,input,textarea,select{font:inherit}button{cursor:pointer}button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.app{max-width:1600px;margin:auto;padding:20px 24px 40px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:12px}.logo{width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#0a1a12;display:grid;place-items:center;font-size:20px;font-weight:900}
+h1{font-size:20px;margin:0;letter-spacing:-.03em}h2{font-size:16px;margin:0;letter-spacing:-.02em}h3{font-size:14px;margin:0}
+.top-actions{display:flex;gap:8px;flex-wrap:wrap}
+.btn{border:1px solid var(--line);background:var(--panel2);color:var(--text);border-radius:10px;padding:9px 14px;font-weight:600;font-size:13px;transition:all .15s;display:inline-flex;align-items:center;gap:6px}
+.btn:hover{border-color:#5a6378;transform:translateY(-1px)}.btn.primary{background:var(--accent);color:#0a1a12;border-color:transparent}.btn.primary:hover{background:#6ee7a8}.btn.danger{background:var(--danger);color:#fff;border-color:transparent}.btn.ghost{background:transparent}.btn.small{padding:6px 10px;font-size:12px}
+.layout{display:grid;grid-template-columns:320px 1fr;gap:20px;align-items:start}
+@media(max-width:900px){.layout{grid-template-columns:1fr}}
+.sidebar{background:var(--panel);border:1px solid var(--line);border-radius:16px;overflow:hidden;position:sticky;top:20px;max-height:calc(100vh-40px);display:flex;flex-direction:column}
+.sidebar-head{padding:16px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:8px}
+.sidebar-head h2{font-size:14px}
+.search{padding:12px 16px;border-bottom:1px solid var(--line)}
+.search input{width:100%;border:1px solid var(--line);border-radius:8px;background:var(--panel2);color:var(--text);padding:8px 12px;font-size:13px}
+.search input:focus{outline:none;border-color:var(--accent)}
+.game-list{flex:1;overflow-y:auto;padding:8px}
+.game-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;cursor:pointer;transition:background .15s;margin-bottom:4px}
+.game-item:hover{background:var(--panel2)}.game-item.active{background:var(--panel2);border:1px solid var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
+.game-thumb{width:48px;height:36px;border-radius:6px;background:var(--panel2);border:1px solid var(--line);display:grid;place-items:center;font-size:18px;flex:none;overflow:hidden}
+.game-thumb img{width:100%;height:100%;object-fit:cover}
+.game-info{flex:1;min-width:0}.game-name{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.game-meta{font-size:11px;color:var(--muted);margin-top:2px}
+.game-status{font-size:10px;padding:3px 7px;border-radius:999px;font-weight:600}
+.status-draft{background:#2a2d35;color:#9ba3b4}.status-published{background:#1a3a2a;color:var(--accent)}
+.section-label{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;padding:12px 12px 6px;margin-top:4px}
+.section-label:first-child{margin-top:0;padding-top:8px}
+.empty-lib{text-align:center;padding:40px 20px;color:var(--muted);font-size:13px}
+.empty-lib .icon{font-size:32px;margin-bottom:8px}
+.main{display:flex;flex-direction:column;gap:16px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.card-head{padding:14px 18px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:10px}
+.card-head h3{font-size:14px}
+.card-body{padding:18px}
+.preview-stage{background:var(--panel2);border:1px solid var(--line);border-radius:12px;min-height:400px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.preview-stage iframe{width:100%;height:500px;border:0;background:#0c1012}
+.preview-controls{display:flex;gap:8px;align-items:center;justify-content:space-between;margin-bottom:12px}
+.switches{display:flex;gap:4px;padding:4px;border:1px solid var(--line);border-radius:10px;background:var(--panel2)}
+.switches button{border:0;border-radius:6px;background:transparent;color:var(--muted);padding:6px 12px;font-size:12px;font-weight:600}
+.switches button.active{background:var(--accent);color:#0a1a12}
+.details-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.detail{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:12px}
+.detail label{font-size:11px;color:var(--muted);display:block;margin-bottom:4px;font-weight:600;text-transform:uppercase;letter-spacing:.05em}
+.detail value{font-size:13px;font-weight:500}
+.detail input{width:100%;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--text);padding:6px 8px;font-size:13px}
+.detail input:focus{outline:none;border-color:var(--accent)}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.toast{position:fixed;right:20px;bottom:20px;padding:12px 16px;border:1px solid #42563b;background:#192219;color:#d8ffc4;border-radius:12px;box-shadow:0 10px 30px #0007;z-index:9;opacity:0;transform:translateY(8px);transition:.2s;pointer-events:none;max-width:400px}
+.toast.show{opacity:1;transform:translateY(0)}.toast.error{border-color:#66552b;background:#241f13;color:#f4d38a}
+.modal-backdrop{position:fixed;inset:0;display:none;align-items:center;justify-content:center;padding:20px;background:#000a;z-index:10}
+.modal-backdrop.open{display:flex}
+.modal{width:min(500px,100%);border:1px solid var(--line);border-radius:16px;background:var(--panel);padding:24px;box-shadow:0 28px 90px #0009}
+.modal h3{margin:0 0 8px;font-size:18px}.modal p{margin:0 0 16px;color:var(--muted);font-size:13px}
+.modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:16px}
+.import-zone{border:2px dashed var(--line);border-radius:12px;padding:30px;text-align:center;color:var(--muted);transition:all .2s;cursor:pointer}
+.import-zone:hover,.import-zone.dragover{border-color:var(--accent);background:#1a2e24;color:var(--text)}
+.import-zone .icon{font-size:32px;margin-bottom:8px}
+.import-zone p{margin:4px 0;font-size:13px}
+.import-zone small{font-size:11px;color:var(--muted)}
+.file-input{display:none}
+.no-selection{text-align:center;padding:60px 20px;color:var(--muted)}
+.no-selection .icon{font-size:48px;margin-bottom:12px}
+.no-selection h3{color:var(--text);margin-bottom:8px}
+</style></head><body><div class="app">
+<header class="top"><div class="brand"><div class="logo">✳</div><div><h1>Game Studio</h1><p style="margin:2px 0 0;color:var(--muted);font-size:12px">Import · Test · Publish</p></div></div><div class="top-actions"><button class="btn ghost" id="resetBtn">Reset library</button><button class="btn primary" id="importBtn">Import game ↗</button></div></header>
+<div class="layout">
+<aside class="sidebar">
+<div class="sidebar-head"><h2>Game Library</h2><span id="libCount" style="font-size:11px;color:var(--muted)">0 games</span></div>
+<div class="search"><input id="searchInput" placeholder="Search games..." type="search"></div>
+<div class="game-list" id="gameList"><div class="empty-lib"><div class="icon">📁</div><p>No games yet.<br>Import a game project to get started.</p></div></div>
+</aside>
+<main class="main">
+<div class="card" id="previewCard">
+<div class="card-head"><h3>Preview Canvas</h3><div class="preview-controls"><div class="switches"><button class="active" id="desktopBtn">Desktop</button><button id="mobileBtn">Mobile</button></div><div id="previewStatus" style="font-size:12px;color:var(--muted)">Select a game to preview</div></div></div>
+<div class="preview-stage" id="previewStage"><div class="no-selection"><div class="icon">🎮</div><h3>No game selected</h3><p>Import a game and select it from the library to test.</p></div></div>
+</main>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<input type="file" id="fileInput" class="file-input" accept=".html,.zip,.js,.css,.json,.png,.jpg,.webp,.svg" multiple>
+<div class="modal-backdrop" id="importModal"><section class="modal"><h3>Import Game Project</h3><p>Upload your game files (index.html, poster.png, etc.) or a ZIP archive.</p>
+<div class="import-zone" id="importZone"><div class="icon">📁</div><p>Drag & drop files here or click to browse</p><small>Supports .html, .zip, .js, .css, .json, .png, .jpg, .webp, .svg</small></div>
+<div id="importFiles" style="margin-top:12px;font-size:12px;color:var(--muted)"></div>
+<div class="modal-actions"><button class="btn ghost" id="cancelImport">Cancel</button><button class="btn primary" id="confirmImport" disabled>Import</button></div>
+</section></div>
+<div class="modal-backdrop" id="publishModal"><section class="modal"><h3>Publish Game</h3><p>Publish to the local arcade preview and/or the live website.</p>
+<div style="margin-bottom:12px"><label style="font-size:12px;color:var(--muted);display:block;margin-bottom:4px;font-weight:600">Platform URL</label><input id="platformUrl" class="control" placeholder="https://wotagame.vercel.app" style="width:100%;border:1px solid var(--line);border-radius:8px;background:var(--panel2);color:var(--text);padding:8px 12px;font-size:13px"></div>
+<div style="margin-bottom:12px"><label style="font-size:12px;color:var(--muted);display:block;margin-bottom:4px;font-weight:600">Studio Token</label><input id="studioToken" class="control" type="password" placeholder="STUDIO_ADMIN_TOKEN" style="width:100%;border:1px solid var(--line);border-radius:8px;background:var(--panel2);color:var(--text);padding:8px 12px;font-size:13px"></div>
+<div style="margin-bottom:12px"><label style="font-size:12px;color:var(--muted);display:block;margin-bottom:4px;font-weight:600">Game Name</label><input id="publishName" class="control" placeholder="My Game" style="width:100%;border:1px solid var(--line);border-radius:8px;background:var(--panel2);color:var(--text);padding:8px 12px;font-size:13px"></div>
+<div class="modal-actions"><button class="btn ghost" id="cancelPublish">Cancel</button><button class="btn primary" id="confirmPublish">Publish</button></div>
+</section></div>
+<script>
+const $=id=>document.getElementById(id);
+const LIB_KEY='xplayercards.game_library';
+let library=[];
+let selectedId=null;
+let importedFiles=[];
+let mode='desktop';
+
+function toast(s,err=false){const t=$('toast');t.textContent=s;t.className='toast'+(err?' error':'')+' show';setTimeout(()=>t.classList.remove('show'),3000);}
+function saveLib(){try{localStorage.setItem(LIB_KEY,JSON.stringify(library));}catch(e){toast('Could not save library.',true);}}
+function loadLib(){try{const s=JSON.parse(localStorage.getItem(LIB_KEY));if(Array.isArray(s))library=s;}catch{}}
+function uid(){return 'g_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,8);}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+
+async function loadDefaultGames(){
+  if(library.length>0)return; // only load on first visit
+  try{
+    const [wcHtml,mmHtml,wcThumb,mmThumb]=await Promise.all([
+      fetch('/assets/games/word-counter.html').then(r=>r.text()),
+      fetch('/assets/games/memory-match.html').then(r=>r.text()),
+      fetch('/assets/games/word-counter-thumb.svg').then(r=>r.text()),
+      fetch('/assets/games/memory-match-thumb.svg').then(r=>r.text())
+    ]);
+    const wcThumbUrl='data:image/svg+xml,'+encodeURIComponent(wcThumb);
+    const mmThumbUrl='data:image/svg+xml,'+encodeURIComponent(mmThumb);
+    const now=new Date().toISOString();
+    library=[
+      {id:uid(),name:'Word Counter',files:{'index.html':wcHtml},thumb:wcThumbUrl,status:'published',publishedSlug:'word-counter',publishedUrl:'https://wotagame.vercel.app/g/word-counter',createdAt:now,updatedAt:now},
+      {id:uid(),name:'Memory Match',files:{'index.html':mmHtml},thumb:mmThumbUrl,status:'draft',publishedSlug:'',publishedUrl:'',createdAt:now,updatedAt:now}
+    ];
+    saveLib();
+  }catch(e){console.warn('Could not load default games:',e);}
+}
+
+function renderLibrary(){
+  const list=$('gameList');const q=$('searchInput').value.toLowerCase();
+  const filtered=library.filter(g=>g.name.toLowerCase().includes(q));
+  $('libCount').textContent=library.length+' game'+(library.length!==1?'s':'');
+  if(filtered.length===0){list.innerHTML='<div class="empty-lib"><div class="icon">📁</div><p>No games found.<br>Import a game to get started.</p></div>';return;}
+  // Group by status
+  const published=filtered.filter(g=>g.status==='published');
+  const unpublished=filtered.filter(g=>g.status!=='published');
+  let html='';
+  if(published.length>0){
+    html+='<div class="section-label">Published</div>';
+    html+=published.map(g=>gameItemHtml(g)).join('');
+  }
+  if(unpublished.length>0){
+    html+='<div class="section-label">Unpublished</div>';
+    html+=unpublished.map(g=>gameItemHtml(g)).join('');
+  }
+  list.innerHTML=html;
+  list.querySelectorAll('.game-item').forEach(el=>{
+    el.addEventListener('click',()=>selectGame(el.dataset.id));
+  });
+}
+function gameItemHtml(g){
+  return `<div class="game-item ${g.id===selectedId?'active':''}" data-id="${g.id}">
+    <div class="game-thumb">${g.thumb?`<img src="${g.thumb}">`:'🎮'}</div>
+    <div class="game-info"><div class="game-name">${esc(g.name)}</div><div class="game-meta">${g.files?Object.keys(g.files).length+' files':'0 files'} · ${new Date(g.updatedAt).toLocaleDateString()}</div></div>
+    <span class="game-status ${g.status==='published'?'status-published':'status-draft'}">${g.status==='published'?'Live':'Draft'}</span>
+  </div>`;
+}
+
+function selectGame(id){
+  selectedId=id;
+  const g=library.find(x=>x.id===id);
+  if(!g)return;
+  renderLibrary();
+  // Preview
+  const stage=$('previewStage');
+  const html=g.files&&g.files['index.html']?g.files['index.html']:'';
+  if(html){
+    stage.innerHTML=`<iframe id="previewFrame" sandbox="allow-scripts allow-same-origin" srcdoc="${html.replace(/"/g,'&quot;')}"></iframe>`;
+    const fr=stage.querySelector('iframe');
+    fr.style.width=mode==='mobile'?'375px':'100%';
+    fr.style.height=mode==='mobile'?'667px':'500px';
+  } else {
+    stage.innerHTML='<div class="no-selection"><div class="icon">⚠️</div><h3>No index.html found</h3><p>This game project has no index.html file.</p></div>';
+  }
+  $('previewStatus').textContent=g.name+' · '+g.status;
+}
+
+function setMode(m){
+  mode=m;
+  $('desktopBtn').classList.toggle('active',m==='desktop');
+  $('mobileBtn').classList.toggle('active',m==='mobile');
+  if(selectedId)selectGame(selectedId);
+}
+
+function handleFiles(files){
+  importedFiles=Array.from(files);
+  const names=importedFiles.map(f=>f.name).join(', ');
+  $('importFiles').textContent=importedFiles.length+' file(s): '+names;
+  $('confirmImport').disabled=importedFiles.length===0;
+}
+
+async function importGame(){
+  if(importedFiles.length===0)return;
+  const files={};
+  let thumb=null;
+  for(const f of importedFiles){
+    if(f.name.endsWith('.zip')){
+      // Basic zip handling - read as text for html, skip binary for now
+      toast('ZIP support: extracting...',false);
+      const text=await f.text();
+      // Try to find index.html in zip (simplified)
+      if(text.includes('<!doctype')||text.includes('<html')){
+        files['index.html']=text;
+      }
+    } else if(f.name.match(/\.(png|jpg|jpeg|webp|svg|gif)$/i)){
+      const reader=new FileReader();
+      const dataUrl=await new Promise((res,rej)=>{reader.onload=e=>res(e.target.result);reader.onerror=rej;reader.readAsDataURL(f);});
+      files[f.name]=dataUrl;
+      if(!thumb && (f.name==='poster.png'||f.name==='poster.jpg'||f.name==='thumbnail.png'))thumb=dataUrl;
+    } else {
+      const text=await f.text();
+      files[f.name]=text;
+    }
+  }
+  if(!files['index.html']){
+    // Check if any html file exists
+    const htmlKey=Object.keys(files).find(k=>k.endsWith('.html'));
+    if(htmlKey){files['index.html']=files[htmlKey];delete files[htmlKey];}
+  }
+  if(!thumb){
+    const imgKey=Object.keys(files).find(k=>k.match(/\.(png|jpg|jpeg|webp|svg|gif)$/i));
+    if(imgKey)thumb=files[imgKey];
+  }
+  const name=prompt('Game name:', importedFiles[0].name.replace(/\.(html|zip)$/i,''))||'Untitled Game';
+  const game={id:uid(),name,files,thumb,status:'draft',publishedSlug:'',publishedUrl:'',createdAt:new Date().toISOString(),updatedAt:new Date().toISOString()};
+  library.unshift(game);
+  saveLib();
+  renderLibrary();
+  selectGame(game.id);
+  $('importModal').classList.remove('open');
+  importedFiles=[];
+  $('importFiles').textContent='';
+  $('confirmImport').disabled=true;
+  toast('Game imported: '+name);
+}
+
+function deleteGame(id){
+  if(!confirm('Delete this game from your library?'))return;
+  library=library.filter(g=>g.id!==id);
+  if(selectedId===id){selectedId=null;$('previewStage').innerHTML='<div class="no-selection"><div class="icon">🎮</div><h3>No game selected</h3><p>Import a game and select it from the library to test.</p></div>';$('previewStatus').textContent='Select a game to preview';}
+  saveLib();
+  renderLibrary();
+  toast('Game deleted.');
+}
+
+function publishGame(){
+  const g=library.find(x=>x.id===selectedId);
+  if(!g){toast('Select a game first.',true);return;}
+  $('publishName').value=g.name;
+  $('publishModal').classList.add('open');
+}
+
+async function doPublish(){
+  const g=library.find(x=>x.id===selectedId);
+  if(!g)return;
+  const base=$('platformUrl').value.trim().replace(/\/+$/,'');
+  const token=$('studioToken').value.trim();
+  const name=$('publishName').value.trim()||g.name;
+  if(!base){toast('Enter platform URL.',true);return;}
+  if(!token||token.length<32){toast('Enter valid token (32+ chars).',true);return;}
+  const html=g.files&&g.files['index.html']?g.files['index.html']:'';
+  if(!html){toast('No index.html found.',true);return;}
+  // Generate poster from first image or use placeholder
+  let posterBase64='';
+  const imgKey=Object.keys(g.files||{}).find(k=>k.match(/\.(png|jpg|jpeg|webp)$/i));
+  if(imgKey&&g.files[imgKey].startsWith('data:')){posterBase64=g.files[imgKey].replace(/^data:image\/[^;]+;base64,/,'');}
+  const config={game:'custom',handle:'@yourhandle',title:name,tagline:'Play this game!',siteUrl:'',accent:'#7cffb2',postText:''};
+  $('confirmPublish').disabled=true;$('confirmPublish').textContent='Publishing…';
+  try{
+    const resp=await fetch(base+'/api/games',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({config,posterBase64})});
+    const data=await resp.json().catch(()=>({}));
+    if(!resp.ok)throw new Error(data.error||('Publish failed (HTTP '+resp.status+').'));
+    g.status='published';g.publishedSlug=data.slug;g.publishedUrl=data.url;g.name=name;g.updatedAt=new Date().toISOString();
+    saveLib();renderLibrary();selectGame(g.id);
+    $('publishModal').classList.remove('open');
+    toast('Published: '+data.url);
+    showOutput('Published', 'GAME URL\n'+data.url+'\n\nPOSTER URL\n'+data.posterUrl+'\n\nSLUG\n'+data.slug+'\n\nCopy this URL to share your game.');
+  }catch(e){toast(e.message||'Publishing failed.',true);}
+  finally{$('confirmPublish').disabled=false;$('confirmPublish').textContent='Publish';}
+}
+
+function showOutput(title,txt){
+  // Create output area if not exists
+  let area=$('outputArea');
+  if(!area){
+    area=document.createElement('div');area.id='outputArea';area.style.marginTop='12px';
+    area.innerHTML='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><strong id="outputTitle"></strong><button class="btn small" id="closeOutput">Close</button></div><pre class="code" id="outputCode" style="background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:12px;font-size:11px;overflow:auto;max-height:200px;white-space:pre-wrap"></pre>';
+    $('previewCard').appendChild(area);
+    $('closeOutput').onclick=()=>area.remove();
+  }
+  $('outputTitle').textContent=title;$('outputCode').textContent=txt;
+}
+
+// Event listeners
+$('importBtn').onclick=()=>$('importModal').classList.add('open');
+$('cancelImport').onclick=()=>$('importModal').classList.remove('open');
+$('importZone').onclick=()=>$('fileInput').click();
+$('fileInput').addEventListener('change',e=>handleFiles(e.target.files));
+$('importZone').addEventListener('dragover',e=>{e.preventDefault();$('importZone').classList.add('dragover');});
+$('importZone').addEventListener('dragleave',()=>$('importZone').classList.remove('dragover'));
+$('importZone').addEventListener('drop',e=>{e.preventDefault();$('importZone').classList.remove('dragover');handleFiles(e.dataTransfer.files);});
+$('confirmImport').onclick=importGame;
+$('desktopBtn').onclick=()=>setMode('desktop');
+$('mobileBtn').onclick=()=>setMode('mobile');
+$('searchInput').addEventListener('input',renderLibrary);
+$('resetBtn').onclick=()=>{if(confirm('Reset entire game library?')){library=[];selectedId=null;saveLib();renderLibrary();$('previewStage').innerHTML='<div class="no-selection"><div class="icon">🎮</div><h3>No game selected</h3><p>Import a game and select it from the library to test.</p></div>';$('previewStatus').textContent='Select a game to preview';toast('Library reset.');}};
+
+// Publish modal
+const pubBtn=document.createElement('button');
+pubBtn.className='btn primary';pubBtn.textContent='Publish selected game';pubBtn.style.marginTop='8px';
+// Add publish button to main area
+const main=document.querySelector('.main');
+const pubCard=document.createElement('div');pubCard.className='card';pubCard.innerHTML='<div class="card-head"><h3>Publish</h3></div><div class="card-body"><p style="color:var(--muted);font-size:13px;margin:0 0 12px">Publish the selected game to the local arcade and live website.</p><button class="btn primary" id="publishBtn2" style="width:100%">Publish selected game ↗</button></div>';
+main.appendChild(pubCard);
+$('publishBtn2').onclick=publishGame;
+$('cancelPublish').onclick=()=>$('publishModal').classList.remove('open');
+$('confirmPublish').onclick=publishGame;
+
+loadLib();
+loadDefaultGames().then(()=>{renderLibrary();});
+</script></body></html>

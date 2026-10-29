@@ -1,0 +1,7 @@
+I made a Word Finder Puzzle for a quick brain break 🔎
+
+Find all 8 hidden words in the grid, then challenge a friend to beat your time.
+
+Play Word Finder Puzzle: [add your public HTTPS game URL after deployment]
+
+Challenge a friend to beat your score.

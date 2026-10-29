@@ -1,0 +1,77 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Memory Match</title>
+<style>
+:root{color-scheme:dark;--bg:#0f1115;--card:#181b22;--line:#2d3139;--muted:#8b93a7;--text:#f4f6fb;--accent:#7cffb2;--accent2:#5eead4}
+*{box-sizing:border-box;margin:0;padding:0}body{background:radial-gradient(ellipse 80% 50% at 20% -10%,#1a2e24 0,transparent 60%),var(--bg);color:var(--text);font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+.wrap{width:100%;max-width:420px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px}
+h1{font-size:20px;margin-bottom:4px;letter-spacing:-.03em}
+.sub{color:var(--muted);font-size:13px;margin-bottom:16px;display:flex;justify-content:space-between}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.tile{aspect-ratio:1;border:1px solid var(--line);border-radius:10px;background:var(--bg);display:grid;place-items:center;font-size:24px;cursor:pointer;transition:all .15s;user-select:none}
+.tile:hover{border-color:#5a6378;transform:translateY(-1px)}
+.tile.flipped{background:var(--card);border-color:var(--accent)}
+.tile.matched{background:#1a3a2a;border-color:var(--accent);opacity:.7;pointer-events:none}
+.tile.hidden{color:transparent}
+.stats{display:flex;justify-content:space-between;margin-top:14px;font-size:12px;color:var(--muted)}
+.stats strong{color:var(--text)}
+.btn{margin-top:14px;width:100%;padding:10px;border:1px solid var(--line);border-radius:8px;background:transparent;color:var(--text);font-size:13px;font-weight:600;cursor:pointer}
+.btn:hover{border-color:var(--accent);color:var(--accent)}
+.win{display:none;margin-top:14px;padding:12px;background:#1a3a2a;border:1px solid var(--accent);border-radius:10px;text-align:center;font-size:13px}
+.win strong{color:var(--accent)}
+</style></head><body>
+<div class="wrap"><div class="card">
+<h1>Memory Match</h1>
+<div class="sub"><span>Find all pairs</span><span id="moves">0 moves</span></div>
+<div class="grid" id="grid"></div>
+<div class="stats"><span>Pairs: <strong id="pairs">0/8</strong></span><span>Best: <strong id="best">—</strong></span></div>
+<div class="win" id="win">🎉 All pairs found in <strong id="winMoves"></strong> moves!</div>
+<button class="btn" id="reset">New Game</button>
+</div></div>
+<script>
+const $=id=>document.getElementById(id);
+const faces=[' fox ',' tree ',' star ',' moon ',' fire ',' wave ',' leaf ',' gem '].map(s=>s.trim());
+let deck=[],flipped=[],matched=new Set(),moves=0,locked=false;
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function render(){
+  const g=$('grid');g.innerHTML='';
+  deck.forEach((f,i)=>{
+    const t=document.createElement('div');
+    t.className='tile'+(flipped.includes(i)?' flipped':'')+(matched.has(i)?' matched':'')+(flipped.includes(i)||matched.has(i)?'':' hidden');
+    t.textContent=flipped.includes(i)||matched.has(i)?f:'?';
+    t.onclick=()=>flip(i);
+    g.appendChild(t);
+  });
+  $('moves').textContent=moves+' move'+(moves!==1?'s':'');
+  $('pairs').textContent=(matched.size/2)+'/'+(deck.length/2);
+}
+function flip(i){
+  if(locked||matched.has(i)||flipped.includes(i))return;
+  flipped.push(i);
+  if(flipped.length===2){
+    moves++;locked=true;
+    const[a,b]=flipped;
+    if(deck[a]===deck[b]){
+      matched.add(a);matched.add(b);flipped=[];locked=false;
+      if(matched.size===deck.length){
+        $('winMoves').textContent=moves;
+        $('win').style.display='block';
+        const best=localStorage.getItem('xmg.best.memory');
+        if(!best||moves<+best){localStorage.setItem('xmg.best.memory',moves);$('best').textContent=moves;}
+      }
+    } else {
+      setTimeout(()=>{flipped=[];locked=false;render();},600);
+    }
+  }
+  render();
+}
+function newGame(){
+  deck=shuffle(faces.concat(faces));
+  flipped=[];matched=new Set();moves=0;locked=false;
+  $('win').style.display='none';
+  const best=localStorage.getItem('xmg.best.memory');
+  $('best').textContent=best||'—';
+  render();
+}
+$('reset').onclick=newGame;
+newGame();
+</script></body></html>

@@ -1,0 +1,57 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "builds": [
+    {
+      "src": "api/*.js",
+      "use": "@vercel/node",
+      "config": {
+        "includeFiles": [
+          "lib/db.js",
+          "lib/auth.js",
+          "lib/game-runtime.js"
+        ]
+      }
+    },
+    {
+      "src": "api/**/*.js",
+      "use": "@vercel/node",
+      "config": {
+        "includeFiles": [
+          "lib/db.js",
+          "lib/auth.js",
+          "lib/game-runtime.js"
+        ]
+      }
+    },
+    {
+      "src": "index.html",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "game-runtime.js",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "examples/**/*",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "assets/**/*",
+      "use": "@vercel/static"
+    }
+  ],
+  "routes": [
+    {
+      "src": "^/g/(?<slug>[a-z0-9][a-z0-9-]{3,59})/?$",
+      "dest": "/api/play.js?slug=$slug"
+    },
+    {
+      "src": "^/api/games/(?<slug>[a-z0-9][a-z0-9-]{3,59})/?$",
+      "dest": "/api/game.js?slug=$slug"
+    },
+    {
+      "src": "^/api/poster/(?<slug>[a-z0-9][a-z0-9-]{3,59})/?$",
+      "dest": "/api/poster.js?slug=$slug"
+    }
+  ]
+}

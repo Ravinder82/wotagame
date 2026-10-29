@@ -1,0 +1,18 @@
+{
+  "name": "wotagame-studio",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Central mini-game builder and hosted playable game platform.",
+  "scripts": {
+    "start": "node server.mjs",
+    "dev": "node server.mjs",
+    "check": "node --check server.mjs && node --check lib/shared.js && node --check lib/db.js && node --check lib/auth.js && node --check api/games/index.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "type": "module",
+  "dependencies": {
+    "@neondatabase/serverless": "^1.0.2"
+  }
+}

@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 340" role="img" aria-labelledby="title desc">
+<title id="title">Hailstorm Run artwork</title><desc id="desc">A stick figure sprints over an icy path while hailstones and slanted rain streak across a cinematic storm.</desc>
+<defs>
+ <linearGradient id="stormSky" x2=".1" y2="1"><stop stop-color="#101735"/><stop offset=".48" stop-color="#214f7b"/><stop offset="1" stop-color="#9eddea"/></linearGradient>
+ <radialGradient id="stormGlow"><stop stop-color="#b8f0ff" stop-opacity=".8"/><stop offset="1" stop-color="#6acbff" stop-opacity="0"/></radialGradient>
+ <radialGradient id="ice"><stop stop-color="#fff"/><stop offset=".4" stop-color="#d5f5ff"/><stop offset="1" stop-color="#70aedb"/></radialGradient>
+ <linearGradient id="scarf" x2="1" y2="1"><stop stop-color="#ffad75"/><stop offset="1" stop-color="#f05c61"/></linearGradient>
+ <filter id="glow"><feGaussianBlur stdDeviation="9"/></filter>
+ <filter id="shadow"><feDropShadow dx="0" dy="8" stdDeviation="6" flood-color="#061020" flood-opacity=".55"/></filter>
+ <pattern id="grain" width="25" height="25" patternUnits="userSpaceOnUse"><circle cx="7" cy="6" r=".7" fill="#fff" opacity=".2"/><circle cx="20" cy="18" r=".6" fill="#fff" opacity=".12"/></pattern>
+</defs>
+<rect width="480" height="340" fill="url(#stormSky)"/>
+<ellipse cx="327" cy="66" rx="175" ry="118" fill="url(#stormGlow)"/>
+<path d="M0 99 39 75 72 85 114 49 159 80 206 44 250 78 290 50 341 85 388 57 433 83 480 51V175H0Z" fill="#1c3151" opacity=".85"/>
+<path d="m0 151 60-42 42 22 58-49 48 52 54-39 55 46 51-42 54 36 58-36v164H0Z" fill="#203a5b"/>
+<path d="M0 208 64 168 122 190 181 152 243 195 301 163 357 188 423 150 480 179V340H0Z" fill="#101c31"/>
+<g stroke-linecap="round">
+ <path d="M41 12 12 60M97 4 71 49M153 10 126 56M209 0 182 47M264 10 239 55M323 2 296 48M379 6 353 55M440 5 413 50" stroke="#c9f3ff" stroke-opacity=".54" stroke-width="4"/>
+ <path d="M18 81 5 103M70 71 57 92M127 89 114 108M184 72 170 94M241 88 228 110M301 72 288 94M360 89 347 109M419 72 406 93M472 87 459 107" stroke="#d9f8ff" stroke-opacity=".55" stroke-width="2.5"/>
+</g>
+<path d="m349 18-27 52h23l-16 33 50-61h-27l15-24Z" fill="#b9f4ff" opacity=".85" filter="url(#glow)"/><path d="m349 18-27 52h23l-16 33 50-61h-27l15-24Z" fill="#d9fbff"/>
+<g fill="url(#ice)" stroke="#e8fcff" stroke-width="1.3">
+ <circle cx="52" cy="121" r="8"/><circle cx="107" cy="43" r="6"/><circle cx="167" cy="95" r="10"/><circle cx="256" cy="39" r="7"/><circle cx="301" cy="127" r="9"/><circle cx="422" cy="91" r="11"/><circle cx="455" cy="145" r="6"/><circle cx="81" cy="183" r="5"/>
+</g>
+<g fill="#fff" opacity=".45"><circle cx="49" cy="118" r="2.5"/><circle cx="164" cy="92" r="3"/><circle cx="418" cy="87" r="3.5"/><circle cx="298" cy="124" r="2.5"/></g>
+<path d="M0 268 65 237 126 257 192 221 253 259 325 231 391 254 454 225 480 238V340H0Z" fill="#0a1422"/>
+<path d="M0 276 65 246 126 266 192 230 253 268 325 240 391 263 454 234 480 247" stroke="#83d7ee" stroke-width="3" fill="none" opacity=".75"/>
+<path d="M0 292c120-14 260-5 480-15v63H0Z" fill="#07101b"/>
+<path d="M177 278c24-9 50-9 76 0" stroke="#90ddef" stroke-width="4" stroke-linecap="round" opacity=".6"/>
+<g filter="url(#shadow)" stroke-linecap="round" stroke-linejoin="round">
+ <path d="M238 173 193 156 163 129 151 134 177 171 215 195" fill="none" stroke="#07101a" stroke-width="18"/>
+ <path d="M231 190 197 225 159 246" fill="none" stroke="#07101a" stroke-width="20"/>
+ <path d="M231 190 264 223 293 235" fill="none" stroke="#07101a" stroke-width="20"/>
+ <path d="M224 141 204 169 225 196 266 177" fill="none" stroke="#07101a" stroke-width="21"/>
+ <path d="M207 160 164 128 151 133 180 174" fill="none" stroke="#e8f7ff" stroke-opacity=".22" stroke-width="3"/>
+ <circle cx="241" cy="105" r="23" fill="#080f1b" stroke="#93ddec" stroke-width="3"/>
+ <path d="M220 107c2-18 18-29 33-22" fill="none" stroke="#b4f1ff" stroke-width="3" opacity=".85"/>
+ <path d="M220 129 207 153 229 180 266 159" fill="none" stroke="#08121e" stroke-width="20"/>
+ <path d="M211 152 174 168" fill="none" stroke="#08121e" stroke-width="17"/>
+ <path d="M224 145 257 129 277 139" fill="none" stroke="#08121e" stroke-width="17"/>
+ <path d="M220 129 239 134 256 123" fill="none" stroke="url(#scarf)" stroke-width="8"/>
+ <path d="M221 131 197 117 184 122 208 146" fill="none" stroke="url(#scarf)" stroke-width="8"/>
+</g>
+<g fill="#aaf0ff" opacity=".8"><path d="m326 179 5-12 5 12 12 5-12 5-5 12-5-12-12-5Z"/><path d="m99 211 3-8 3 8 8 3-8 3-3 8-3-8-8-3Z"/></g>
+<rect width="480" height="340" fill="url(#grain)" opacity=".5"/><rect x=".75" y=".75" width="478.5" height="338.5" rx="18" fill="none" stroke="#fff" stroke-opacity=".16" stroke-width="1.5"/>
+</svg>
