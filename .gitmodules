@@ -1,0 +1,3 @@
+[submodule "local-tools/ohmygame"]
+	path = local-tools/ohmygame
+	url = https://github.com/WhiteTowerAI/ohmygame.git

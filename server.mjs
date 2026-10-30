@@ -1,166 +1,193 @@
+import { renderGamePage } from "./lib/shared.js";
 import http from "node:http";
-import { spawn } from "node:child_process";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { readFile } from "node:fs/promises";
-import { readdirSync } from "node:fs";
+import { existsSync } from "node:fs";
+import { networkInterfaces } from "node:os";
 
 const root = path.dirname(fileURLToPath(import.meta.url));
 const port = Number(process.env.PORT || 4178);
+const bindHost = process.env.XPC_HOST || "0.0.0.0";
 const types = {
   ".html": "text/html; charset=utf-8",
   ".css": "text/css; charset=utf-8",
   ".js": "text/javascript; charset=utf-8",
+  ".mjs": "text/javascript; charset=utf-8",
   ".json": "application/json; charset=utf-8",
+  ".avif": "image/avif",
+  ".gif": "image/gif",
+  ".ico": "image/x-icon",
   ".svg": "image/svg+xml",
+  ".ttf": "font/ttf",
+  ".wasm": "application/wasm",
   ".png": "image/png",
   ".jpg": "image/jpeg",
   ".jpeg": "image/jpeg",
-  ".webp": "image/webp"
+  ".webp": "image/webp",
+  ".woff": "font/woff",
+  ".woff2": "font/woff2",
+  ".mp3": "audio/mpeg",
+  ".ogg": "audio/ogg",
+  ".mp4": "video/mp4",
+  ".webm": "video/webm"
 };
 
-// Workspace 2 — Public arcade preview + Game Studio only.
-// Marketing system was deleted 2026-10-31. This 4178 workspace is Arcade preview + Game Studio only.
+// Workspace -- Public arcade preview + Game Studio only.
 const localViews = new Map([
-  ["/", "local-tools/control-center.html"],
+  ["/", "index.html"],
   ["/__xpc/arcade", "index.html"],
   ["/__xpc/arcade/", "index.html"],
   ["/studio", "local-tools/studio.html"],
   ["/studio/", "local-tools/studio.html"]
 ]);
 
-let publishState = {
-  status: "idle",
-  message: "Ready to publish the public arcade to Vercel.",
-  url: "",
-  startedAt: null,
-  completedAt: null
-};
-
-function sendJson(res, status, body) {
-  res.writeHead(status, {
-    "Content-Type": "application/json; charset=utf-8",
-    "Cache-Control": "no-store",
-    "X-Content-Type-Options": "nosniff"
-  });
-  res.end(JSON.stringify(body));
+function isLoopbackAddress(address = "") {
+  return address === "127.0.0.1" || address === "::1" || address.startsWith("::ffff:127.");
 }
 
-function getProductionUrl(output) {
-  const urls = output.match(/https:\/\/[^\s]+/g) || [];
-  const brand = url => /^https:\/\/wotagame(-[a-z0-9-]+)?\.vercel\.app/.test(url);
-  return urls.find(brand) || urls.at(-1) || "https://wotagame.vercel.app/";
+function isPhonePreviewRequest(method, pathname) {
+  return ["GET", "HEAD"].includes(method)
+    && (["/__xpc/arcade", "/__xpc/arcade/", "/index.html", "/studio", "/studio/"].includes(pathname)
+      || pathname.startsWith("/assets/")
+      || pathname.startsWith("/g/")
+      || /^\/__xpc\/local-game\/[a-z0-9-]+\/(?:cover|play)(?:\/.*)?$/.test(pathname));
 }
 
-function countServerlessFunctions() {
-  const files = [];
-  const scan = dir => {
-    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
-      if (entry.name === "node_modules" || entry.name.startsWith(".")) continue;
-      const full = path.join(dir, entry.name);
-      if (entry.isDirectory()) scan(full);
-      else if (entry.name.endsWith(".js")) files.push(full);
+function getLanAddress() {
+  const interfaces = networkInterfaces();
+  for (const name of ["en0", "en1", ...Object.keys(interfaces)]) {
+    const addresses = interfaces[name];
+    for (const address of addresses || []) {
+      if (!address.internal && (address.family === "IPv4" || address.family === 4)) return address.address;
     }
-  };
-  const apiDir = path.join(root, "api");
-  if (fs.existsSync(apiDir)) scan(apiDir);
-  return files.length;
-}
-
-function startPublish() {
-  if (publishState.status === "publishing") return false;
-
-  // Vercel Hobby plan caps deployments at 12 serverless functions.
-  const fnCount = countServerlessFunctions();
-  if (fnCount > 12) {
-    publishState = {
-      status: "failed",
-      message: `Blocked before deploy: ${fnCount} serverless functions in api/ exceed Vercel's Hobby-plan limit of 12. Remove unused api/*.js files and publish again.`,
-      url: "",
-      startedAt: new Date().toISOString(),
-      completedAt: new Date().toISOString()
-    };
-    return true; // state is set and shown by the UI on the next poll
   }
-
-  publishState = {
-    status: "publishing",
-    message: `Publishing the public arcade to Vercel… (${fnCount} serverless functions, plan limit 12)`,
-    url: "",
-    startedAt: new Date().toISOString(),
-    completedAt: null
-  };
-
-  const child = spawn(process.env.XPC_VERCEL_BIN || "vercel", ["--prod", "--yes"], {
-    cwd: root,
-    env: { ...process.env, CI: "1" },
-    stdio: ["ignore", "pipe", "pipe"]
-  });
-
-  let output = "";
-  child.stdout.on("data", chunk => { output += String(chunk); });
-  child.stderr.on("data", chunk => { output += String(chunk); });
-
-  child.on("error", error => {
-    publishState = {
-      status: "failed",
-      message: `Could not start Vercel publish: ${error.code === "ENOENT" ? "Vercel CLI is unavailable." : "see the local server terminal."}`,
-      url: "",
-      startedAt: publishState.startedAt,
-      completedAt: new Date().toISOString()
-    };
-  });
-
-  child.on("close", code => {
-    const succeeded = code === 0;
-    let failReason = "";
-    if (!succeeded) {
-      const lines = output.split("\n").map(l => l.trim()).filter(Boolean);
-      const errLine = lines.findLast(l => /error|failed|too many|no more than|invalid|exceed/i.test(l));
-      failReason = (errLine || lines.at(-1) || "").replace(/^>\s?/, "").slice(0, 280);
-    }
-    publishState = {
-      status: succeeded ? "published" : "failed",
-      message: succeeded
-        ? "Public arcade published to Vercel."
-        : `Vercel publish failed (exit code ${code}): ${failReason || "no output — run 'vercel --prod' in the project folder to see why."}`,
-      url: succeeded ? getProductionUrl(output) : "",
-      startedAt: publishState.startedAt,
-      completedAt: new Date().toISOString()
-    };
-  });
-
-  return true;
+  return "<Mac-LAN-IP>";
 }
 
-http.createServer(async (req, res) => {
+const studioRoot = path.join(root, "local-tools", "ohmygame");
+const examplesRoot = path.join(studioRoot, ".runtime", "examples");
+let localExamples = [];
+try {
+  const catalog = JSON.parse(await readFile(path.join(examplesRoot, "catalog.json"), "utf8"));
+  if (Array.isArray(catalog.examples)) {
+    localExamples = catalog.examples.filter(example =>
+      example && /^[a-z0-9-]+$/.test(example.id)
+      && example.type === "web-game"
+      && typeof example.name === "string"
+      && typeof example.description === "string"
+      && typeof example.cover === "string"
+      && typeof example.play === "string"
+    );
+  }
+} catch {}
+
+function escapeHtml(value) {
+  return String(value).replace(/[&<>"']/g, character => {
+    switch (character) {
+      case "&": return "&amp;";
+      case "<": return "&lt;";
+      case ">": return "&gt;";
+      case '"': return "&quot;";
+      case "'": return "&#39;";
+      default: return character;
+    }
+  });
+}
+
+function addLocalExampleCards(html) {
+  if (!localExamples.length) return html;
+  const cards = localExamples.map(example => {
+    const name = escapeHtml(example.name);
+    const description = escapeHtml(example.description);
+    const search = escapeHtml(`${example.name} ${example.description} OhMyGame local sample`);
+    const gameUrl = `/__xpc/local-game/${example.id}/play/`;
+    const coverUrl = `/__xpc/local-game/${example.id}/cover`;
+    return `<article class="game-card" data-search="${search}"><div class="card-art"><img class="card-art-image" src="${coverUrl}" alt="${name} game cover"></div><div class="card-body"><div class="card-title-row"><h3 class="card-title">${name}</h3><span class="card-arrow" aria-hidden="true">\u2197</span></div><p class="card-desc">${description}</p><a class="button card-action" href="${gameUrl}">Play Local Sample <span aria-hidden="true">\u2192</span></a></div></article>`;
+  }).join("\n");
+  const marker = '  <div class="empty-state" id="emptyState">';
+  const localSection = `<div class="section-head" style="margin-top:38px"><div><div class="eyebrow" style="margin-bottom:10px"><span class="spark">\u2747</span> Made with OhMyGame</div><h2>Studio Sample Games</h2><p>Playable examples available in this local preview.</p></div></div><div class="games-grid" id="ohmygameSamples">${cards}</div>\n`;
+  return html.replace(marker, `${localSection}${marker}`);
+}
+
+function getLocalExampleFile(pathname) {
+  const match = pathname.match(/^\/__xpc\/local-game\/([a-z0-9-]+)\/(cover|play)(?:\/(.*))?$/);
+  if (!match) return null;
+  const [, id, resource, requestedPath = ""] = match;
+  const example = localExamples.find(entry => entry.id === id);
+  if (!example || (resource === "cover" && requestedPath)) return null;
+  const file = resource === "cover"
+    ? path.resolve(examplesRoot, example.cover)
+    : path.resolve(examplesRoot, example.play, requestedPath || "index.html");
+  return file.startsWith(`${examplesRoot}${path.sep}`) ? file : null;
+}
+
+const server = http.createServer(async (req, res) => {
   try {
     const url = new URL(req.url, "http://localhost");
     const pathname = decodeURIComponent(url.pathname);
 
-    if (pathname === "/__xpc/publish/status") {
-      if (req.method !== "GET") {
-        sendJson(res, 405, { error: "Method not allowed." });
-        return;
-      }
-      sendJson(res, 200, publishState);
+    if (!isLoopbackAddress(req.socket.remoteAddress) && !isPhonePreviewRequest(req.method, pathname)) {
+      res.writeHead(403, { "Content-Type": "text/plain; charset=utf-8", "X-Content-Type-Options": "nosniff" });
+      res.end("Only the public arcade preview is available over the local network.");
       return;
     }
 
-    if (pathname === "/__xpc/publish") {
-      if (req.method !== "POST") {
-        sendJson(res, 405, { error: "Method not allowed." });
+    if (pathname.startsWith("/g/")) {
+      const slug = pathname.replace(/^\/g\//, "").replace(/\/+$/, "");
+      if (!/^[a-z0-9][a-z0-9-]{3,59}$/.test(slug)) {
+        res.writeHead(400, { "Content-Type": "text/plain; charset=utf-8" });
+        res.end("Invalid game link.");
         return;
       }
-      if (req.headers.origin && ![`http://localhost:${port}`, `http://127.0.0.1:${port}`].includes(req.headers.origin)) {
-        sendJson(res, 403, { error: "Local origin required." });
+      const staticConfigs = {
+        "hailstorm-run": {
+          game: "hailstorm",
+          title: "Hailstorm Run",
+          tagline: "Keep moving. Dodge the hail. See how long you can survive the storm.",
+          handle: "@WotaGame",
+          accent: "#69b7ff"
+        },
+        "word-finder-puzzle-3be5f1": {
+          game: "wordfinder",
+          title: "Word Finder Puzzle",
+          tagline: "A little brain break. Find the hidden words and challenge a friend.",
+          handle: "@WotaGame",
+          accent: "#a9f36c"
+        }
+      };
+      const cfg = staticConfigs[slug] || {
+        game: slug === "hailstorm-run" ? "hailstorm" : "wordfinder",
+        title: slug.replace(/-/g, " ").replace(/\b\w/g, c => c.toUpperCase()),
+        tagline: "Mini-game challenge on WotaGame.",
+        handle: "@WotaGame",
+        accent: "#69b7ff"
+      };
+      const baseUrl = `http://${req.headers.host || "localhost:4178"}`;
+      const html = renderGamePage({ slug, config: cfg, baseUrl });
+      res.writeHead(200, {
+        "Content-Type": "text/html; charset=utf-8",
+        "Cache-Control": "no-store",
+        "X-Content-Type-Options": "nosniff"
+      });
+      res.end(html);
+      return;
+    }
+
+    if (pathname.startsWith("/__xpc/local-game/")) {
+      const file = getLocalExampleFile(pathname);
+      if (!file) {
+        res.writeHead(404, { "Content-Type": "text/plain; charset=utf-8" });
+        res.end("Local game not found.");
         return;
       }
-      if (!startPublish()) {
-        sendJson(res, 409, publishState);
-        return;
-      }
-      sendJson(res, 202, publishState);
+      const body = await readFile(file);
+      res.writeHead(200, {
+        "Content-Type": types[path.extname(file)] || "application/octet-stream",
+        "Cache-Control": "no-store",
+        "X-Content-Type-Options": "nosniff"
+      });
+      res.end(body);
       return;
     }
 
@@ -171,7 +198,8 @@ http.createServer(async (req, res) => {
       res.end("Forbidden");
       return;
     }
-    const body = await readFile(file);
+    let body = await readFile(file);
+    if (pathname === "/__xpc/arcade" || pathname === "/__xpc/arcade/") body = addLocalExampleCards(body.toString("utf8"));
     res.writeHead(200, {
       "Content-Type": types[path.extname(file)] || "application/octet-stream",
       "Cache-Control": "no-store",
@@ -182,4 +210,16 @@ http.createServer(async (req, res) => {
     res.writeHead(404, { "Content-Type": "text/plain; charset=utf-8" });
     res.end("Not found");
   }
-}).listen(port, "127.0.0.1", () => console.log(`WotaGame arcade + studio workspace running at http://localhost:${port}`));
+});
+
+server.listen(port, bindHost, () => {
+  console.log(`WotaGame arcade + Game Studio running at http://localhost:${port}`);
+  console.log(`iPhone arcade preview (same Wi-Fi): http://${getLanAddress()}:${port}/__xpc/arcade`);
+});
+
+for (const signal of ["SIGINT", "SIGTERM"]) {
+  process.once(signal, () => {
+    server.close(() => process.exit(0));
+    setTimeout(() => process.exit(0), 5000).unref();
+  });
+}

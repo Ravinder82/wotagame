@@ -4,5 +4,6 @@
 .vercel/
 node_modules/
 local-tools/.data/
+local-tools/.tooling/
 .DS_Store
 *.log

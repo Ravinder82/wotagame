@@ -165,3 +165,64 @@ Owner directive (verbatim intent): remove 4179 entirely from the local dashboard
 - Launcher renamed `OPEN-STUDIO.command` → `WotaGame Control Center.command` (auto-starts 4178 + opens the dashboard; runs idempotent, verified).
 - Docs absolute paths swept to `Developer/WotaGame`. Only build-time files `local-tools/.data/brand/hero.html`/`social.html` still carry old absolute `file://` paths (harmless).
 - Remaining manual bits for the owner: the Chrome tab group is still named "XPC Control Center" (rename by right-clicking the tab group); there is no GitHub repo yet.
+
+## 2026-10-30 — Autonomous Owner & Builder Cycle: Hailstorm Run launched to fully playable (local only, approval pending)
+
+Routine run execution:
+1. **Inspected & Planned**: Selected `Hailstorm Run` to graduate from "Coming Soon" to a fully playable 2D arcade survival runner.
+2. **Built & Polished**:
+   - `game-runtime.js` & `lib/game-runtime.js`: Implemented `hailstorm()` adhering strictly to WotaGame runtime standards. Features 60 FPS high-DPI canvas rendering, dynamic mountain parallax background, layered falling hailstones (ice shards and giant boulders) with ground warning reticles, agile animated stickman runner with trailing scarf physics, slide/duck mechanics, jump physics, warm embers (+score & warmth recharge), and crystalline shields (absorb 1 fatal impact).
+   - Audio: Integrated Web Audio procedural sound synthesizer with zero latency, zero external asset dependencies, and mute toggle.
+   - Challenge & Replay loop: Integrated with `record("hailstorm", finalDist, false)`, `result()` score card with personal best tracking (`xmg.best.hailstorm`) and challenge URL generation (`?challenge=...m`).
+   - Mobile & Desktop controls: Touch controls with responsive touch buttons (`[◄ Run]`, `[Slide ▾]`, `[Jump ▲]`, `[Run ►]`), canvas touch/swipe detection, and keyboard controls (Arrows / WASD / Space).
+   - `index.html`: Updated Hailstorm Run card from disabled "Coming Soon" to active `<a class="button card-action" href="/g/hailstorm-run">Play Now →</a>`.
+   - `server.mjs`: Added `/g/:slug` local route handler, fixed `isPhonePreviewRequest` method typo, and exposed game to local network/iPhone preview.
+   - `api/play.js`: Added static fallback map ensuring `/g/hailstorm-run` and `/g/word-finder-puzzle-3be5f1` resolve gracefully with or without DB records.
+   - `lib/shared.js`: Registered `"hailstorm"` in `GAME_TYPES`.
+3. **Verification (Evidence Gate)**:
+   - `npm run check`: Clean pass (syntax checks on `server.mjs`, `lib/shared.js`, `lib/db.js`, `lib/auth.js`, `api/games/index.js`).
+   - `node --check`: Clean pass on `game-runtime.js`, `lib/game-runtime.js`, `api/play.js`, `api/game.js`, `api/poster.js`.
+   - Local server (port 4178): `http://localhost:4178/g/hailstorm-run` verified HTTP 200 OK with correct HTML, injected config, and runtime.
+   - Local arcade index: `http://localhost:4178/` verified HTTP 200 OK with Hailstorm Run linked to `/g/hailstorm-run`.
+   - Friend challenge: Verified `http://localhost:4178/g/hailstorm-run?challenge=500m` correctly renders challenge target banner.
+4. **Approval Pending**:
+   - No git push or production Vercel deployment performed.
+   - Ready for owner review and deployment approval.
+
+## 2026-10-30 — Round 2 refinement: Hailstorm Run rebuilt (local only, owner test 1 + 2 pending)
+
+Owner instruction: refine player/graphics, replace click SFX with a music bed, upgrade mechanics for smoothness, reach console-quality immersion, make the UI adapt to every screen (laptop / foldable / tablet / one-screen phone), move controls inside the play canvas — then repeat this upgrade pass on **every** game after v1, and gate publishing on **two manual owner tests** (base + Round-2).
+
+### What changed (local, uncommitted)
+- `game-runtime.js` + `lib/game-runtime.js` — full rewrite of `hailstorm()` (~900 lines).
+  - **Audio:** procedural Web Audio score on an Am–F–C–G loop at 118 BPM — sawtooth pad, triangle bass, arpeggio, intensity-gated lead motif, kick/hat/snare, wind + hail-hiss beds, shared feedback delay. SFX are now chord tones and filtered noise (jump whoosh, land thud, slide sweep, ember chime, shield arpeggio, shield-break crash, tier fanfare). Intensity tracks the difficulty tier. Mute persisted at `xmg.hail.mute`.
+  - **Feel:** fixed 1/60 accumulator, coyote time (8f), jump buffering (9f), variable jump height, double jump, acceleration/skid with ice-patch low friction, wind gusts, hit-stop, squash & stretch, slow-mo (feather) and 2× star boost, auto-pause on `visibilitychange`, `P`/`Esc` pause, `M` mute.
+  - **Scoring:** near-miss combo (`×n`, +6+2n metres), lethal warmth (0 = frozen), 4 pickups (ember / shield / feather / star), 5 difficulty tiers (DRIZZLE→SLEET→HAIL→BLIZZARD→WHITEOUT) with banners and a "next tier" bar, medals at 500/1200/2500/5000 m.
+  - **Fairness:** lane-based hail spawning with a hard cap, red ground reticles that grow as hail falls, giant-hail double telegraph.
+  - **Art:** cached seamless parallax layers (far ridge, pine mid-ridge, near bank, cloud bank, fog), stars, moon with halo, animated aurora ribbons, lightning with a drawn bolt, layered blizzard with wind drift, ice-sheen ground with glints/footprints, speed lines, vignette + tier colour grade. Player is a hooded runner with IK legs/arms, per-state run/jump/slide poses, 2-pass verlet scarf, lantern glow, afterimage trail, animated shield bubble.
+  - **Controls inside the stage:** DOM overlay buttons (◀ ▶ JUMP SLIDE + mute/pause) positioned inside the canvas box with `pointerdown/pointerup` + `setPointerCapture`, plus canvas gestures (tap = jump, swipe down = slide, drag = move) and full keyboard. Canvas has `role="application"` + label.
+  - **Dynamic stage:** DPR-aware backing store; world height fixed at 375 with width derived from the real box aspect, so nothing distorts. Breakpoints: portrait phone 4:3, landscape-short 16:9 capped to `100dvh`, otherwise 16:10.
+- `lib/shared.js` — responsive shell. New `.panel` wrapper; grid info-panel + game-stage at ≥900px (max-width 1500px, `minmax(280px,380px) minmax(0,1fr)`); compact two-column under 600px-tall landscape; 600–899px tablet width; reduced padding ≤560px; `.area` is a flex column so games centre cleanly.
+- `docs/codex/GAME_QUALITY_GATE.md` — new, the reusable two-pass checklist (Round 1 + Round 2 + viewport matrix + release steps).
+- `scripts/build-runtime.mjs` — new, splices `.tmp-hailstorm.js` into both runtime copies, rejects any `</script` sequence, appends the `CFG.game` dispatch, syntax-checks both.
+
+### Verification (evidence)
+- `node --check` clean on `game-runtime.js`, `lib/game-runtime.js`, `lib/shared.js`, `server.mjs`; both runtime copies byte-identical.
+- Inlined `<script>` extracted from the served page parses clean and contains no `</script>`.
+- Browser, 8 viewports — all **no horizontal scroll** and **page fits viewport**:
+  390×844 → 322×242 · 844×390 → 510×286 · 667×375 → 333×187 · 768×1024 → 650×406 ·
+  1024×768 → 487×304 · 1200×800 → 642×401 · 1440×900 → 839×524 · 1920×1080 → 814×509.
+  Shell switches `block` → `grid` correctly; min touch target ≥40px everywhere.
+- 11 s of scripted input (jump / slide / both directions): **0 console errors**, game still running.
+- Full loop observed in a screenshot: ran to **158 m**, struck → "STORM CLAIMED" overlay, result panel
+  populated, `bestTag` → `BEST 158 m`, feedback recorded medal tier, help line switched to restart hints.
+
+### Known open items
+- Scarf over-stretch was fixed after the screenshot above (2-pass constraint, lower drift) — needs owner eye in test 2.
+- Audio can only be confirmed by ear; the scheduler runs but no owner has listened yet.
+- Round-1 manual owner test was never completed, so this is effectively test 1 (base) = superseded by the previous build and test 2 = this build. **Both owner passes are still owed before any publish.**
+- `Picture Puzzle`, `Crossword` remain Coming Soon; `Word Finder Puzzle` has had **no** Round-2 pass.
+
+### Approval
+Nothing pushed, no PR, no merge, no deploy, no production DB write, no Vercel settings change, no spend.
+Local preview: http://localhost:4178/g/hailstorm-run (LAN: http://192.168.1.5:4178/g/hailstorm-run)
